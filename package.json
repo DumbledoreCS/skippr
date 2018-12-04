@@ -1,0 +1,32 @@
+{
+  "name": "skippr",
+  "version": "1.0.0",
+  "description": "app that helps small businesses with online ordering",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server/server.js",
+    "server": "node src/server/server.js"
+  },
+  "author": "team redlippedbatfish",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "pg": "^4.4.3",
+    "pg-format": "^1.0.4",
+    "pg-hstore": "^2.3.2",
+    "pg-promise": "^5.9.7",
+    "sql-template-strings": "^2.2.2"
+  }
+}
