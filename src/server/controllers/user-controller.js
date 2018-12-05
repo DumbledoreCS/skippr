@@ -1,6 +1,6 @@
 const pgClient = require('../models/database');
 
-//UPDATED createUser by Dumbodore POST 'user/signup'
+// UPDATED createUser by Dumbodore POST 'user/signup'
 // STRETCH FEATURE: write new user to users table
 function createUser(req, res) {
   const { firstname, lastname, email, password, phone } = req.body;
@@ -17,7 +17,7 @@ function createUser(req, res) {
   });
 }
 
-//UPDATED verifyUser by Dumbodore POST '/user/login'
+// UPDATED verifyUser by Dumbodore POST '/user/login'
 // fetch user email and password match from users table
 function verifyUser(req, res) {
   const { email, password } = req.body;
@@ -31,7 +31,5 @@ function verifyUser(req, res) {
     else res.status(200).json(result.rows[0]);
   });
 }
-
-
 
 module.exports = { createUser, verifyUser };

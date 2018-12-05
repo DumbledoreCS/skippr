@@ -1,7 +1,7 @@
 const pgClient = require('../models/database');
 
 
-//UPDATED createRest by Dumbodore POST 'restaurant/signup'
+// UPDATED createRest by Dumbodore POST 'restaurant/signup'
 // STRETCH FEATURE: write new restaurant row to restaurants table
 function createRest(req, res) {
   const { name, email, password, address, city, state, zipcode, phone, yelp_link, image_link } = req.body;
@@ -18,7 +18,7 @@ function createRest(req, res) {
   });
 }
 
-//UPDATED verifyRest by Dumbodore POST '/restaurant/login'
+// UPDATED verifyRest by Dumbodore POST '/restaurant/login'
 // fetch restaurant email and password match from restaurants table 
 function verifyRest(req, res) {
   const { email, password } = req.body;
@@ -33,7 +33,7 @@ function verifyRest(req, res) {
   });
 }
 
-//UPDATED displayRests by Dumbodore GET '/user/restaurants'
+// UPDATED displayRests by Dumbodore GET '/user/restaurants'
 // fetch list of restaurants from restaurants table
 function displayRests(req, res) {
   const displayRestsStr = 'SELECT * FROM restaurants;';
@@ -43,6 +43,23 @@ function displayRests(req, res) {
   });
 }
 
+// CREATED createMenu by Dumbodore POST '/restaurant/menu' 
+function createMenu(req, res) {
+  const { name, price, desc, calories, fk_rest_id } = req.body;
+  const values = [name, price, desc, calories, fk_rest_id];
+  const createMenuStr = 'INSERT INTO menu_items (name, price, "desc", calories, fk_rest_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;';
+  pgClient.query(createMenuStr, values, (err, result) => {
+    if (err) res.status(400).json({ error: 'Unable to create menu for your restaurant' });
+    else {
+      res.status(200).json({
+        message: 'New menu item has been successfully added',
+        menu_item: result.rows[0],
+      });
+    }
+  });
+}
+
+// UPDATED getRestMenu by Dumbodore GET '/user/restaurants/:fk_rest_id'
 // fetch list of menu items from menu items table
 function getRestMenu(req, res) {
   const { fkRestId } = req.params;
@@ -54,4 +71,4 @@ function getRestMenu(req, res) {
   });
 }
 
-module.exports = { createRest, verifyRest, displayRests, getRestMenu };
+module.exports = { createRest, verifyRest, displayRests, getRestMenu, createMenu };
