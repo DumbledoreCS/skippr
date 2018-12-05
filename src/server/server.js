@@ -6,6 +6,7 @@ const userController = require('./controllers/user-controller');
 const orderController = require('./controllers/order-controller');
 const restaurantController = require('./controllers/restaurant-controller');
 
+
 const app = express();
 
 app.use(cors());
@@ -21,6 +22,14 @@ app.post('/user/signup', userController.createUser);
 app.post('/user/order', orderController.submitOrder);
 app.post('/restaurant/signup', restaurantController.createRest);
 
+app.get('/test', (req, res) => {
+  res.send('yay!');
+});
+
 app.put('/restaurant/orders/:orderId', orderController.completeOrder);
 
-app.listen(process.env.PORT || 3000);
+// app.listen(process.env.PORT || 3000);
+app.listen(3000, (err) => {
+  if (err) console.log(err);
+  else console.log('Server listening on localhost:3000')
+});
