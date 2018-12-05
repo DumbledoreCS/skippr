@@ -4,48 +4,51 @@ DROP TABLE users
 
 -- Creates the users table
 CREATE TABLE users (
-  user_id SERIAL PRIMARY KEY,
-  user_firstname VARCHAR NOT NULL,
-  user_lastname VARCHAR NOT NULL,
-  user_email VARCHAR NOT NULL,
-  user_password VARCHAR NOT NULL,
-  user_phone VARCHAR NOT NULL
+  id SERIAL PRIMARY KEY,
+  firstname VARCHAR NOT NULL,
+  lastname VARCHAR NOT NULL,
+  email VARCHAR NOT NULL,
+  password VARCHAR NOT NULL,
+  phone VARCHAR NOT NULL
 );
 
 -- This query inserts an new row into the users table
-INSERT INTO users (user_firstname, user_lastname, user_email, user_password, user_phone)
+INSERT INTO users (firstname, lastname, email, password, phone)
   VALUES ('Stanley', 'Kubrick', 'lolita@gmail.com', '2001', '(555) 555-5000');
 
--- This query uses the passed email address to retrieve the user_password from the users table
+
+-- This query uses the passed email address to retrieve the password from the users table
 SELECT * 
 FROM users 
-WHERE user_email = 'lolita@gmail.com';
+WHERE email = 'lolita@gmail.com';
 
 -- RESTAURANTS TABLE
 -- Creates the restaurants table
 CREATE TABLE restaurants (
-  rest_id SERIAL PRIMARY KEY,
-  rest_name VARCHAR NOT NULL,
-  rest_email VARCHAR NOT NULL,
-  rest_password VARCHAR NOT NULL,
-  rest_address VARCHAR NOT NULL,
-  rest_city VARCHAR NOT NULL,
-  rest_state VARCHAR NOT NULL,
-  rest_zipcode VARCHAR NOT NULL,
-  rest_phone VARCHAR NOT NULL,
-  rest_yelp_link VARCHAR NOT NULL,
-  rest_imagelink VARCHAR NOT NULL
+  id SERIAL PRIMARY KEY,
+  name VARCHAR NOT NULL,
+  email VARCHAR NOT NULL,
+  password VARCHAR NOT NULL,
+  latitude VARCHAR,
+  longitude VARCHAR,
+  address VARCHAR ,
+  city VARCHAR,
+  state VARCHAR,
+  zipcode VARCHAR,
+  phone VARCHAR,
+  yelp_link VARCHAR,
+  imagelink VARCHAR
 );
 
 -- This query inserts a new row into the restaurants table
 
-INSERT INTO restaurants (rest_name, rest_email, rest_password, rest_address, rest_city, rest_state, rest_zipcode, rest_phone, rest_yelp_link, rest_imagelink)
+INSERT INTO restaurants (name, email, password, address, city, state, zipcode, phone, yelp_link, image_link)
   VALUES ('Menotti''s Coffee Shop', 'admin@menottis.com', 'espresso424', '56 Windward Ave', 'Venice', 'CA', '90291', '(424) 205-7014', 'https://www.yelp.com/biz/menottis-coffee-stop-venice', 'http://frshgrnd.com/wp-content/uploads/2015/10/menottis-coffee-shop-venice-FRSHGRND-1898-610x424.jpg');
   
 -- This query uses the passed email address to retrieve the rest_password from the restaurants table
 SELECT * 
 FROM restaurants 
-WHERE rest_email = 'admin@menottis.com';
+WHERE email = 'admin@menottis.com';
 
 -- This query selects all the restaurants from the restaurants table
 SELECT *
