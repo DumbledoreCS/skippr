@@ -9,7 +9,11 @@ CREATE TABLE users (
   lastname VARCHAR NOT NULL,
   email VARCHAR NOT NULL,
   password VARCHAR NOT NULL,
-  phone VARCHAR NOT NULL
+  phone VARCHAR NOT NULL,
+  favorite_items: VARCHAR,
+  curr_latitude: DOUBLE PRECISION,
+  curr_longitude: DOUBLE PRECISION,
+  google_id: VARCHAR,
 );
 
 -- This query inserts an new row into the users table
