@@ -1,4 +1,35 @@
+const axios = require('axios');
 const pgClient = require('../models/database');
+
+
+function nearbyRests(req, res) {
+  // grab current coordinates of user
+  let lat;
+  let lng;
+  let restCoords;
+  let nearby;
+  axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAIDCvHRxSebeeGzY38HO1fFBCUY111onc')
+    .then((response) => {
+      lat = response.data.location.lat;
+      lng = response.data.location.lng;
+      const allRestCoordsStr = 'SELECT id, latitude, longitude FROM restaurants;';
+      pgClient.query(allRestCoordsStr, (err, result) => {
+        if (err) {
+          return res.send(err);
+        }
+        restCoords = result.rows;
+      });
+    })
+    .then(() => {
+      const dist = [];
+      restCoords.forEach((elem) => {
+        axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${lat},${lng}&destinations=`)
+      })
+    })
+  // grabs all shops in database
+  // filter list of shops by proximity to user
+  // return filtered list of shops
+}
 
 // STRETCH FEATURE: write new user to users table
 function createUser(req, res) {
@@ -30,4 +61,4 @@ function verifyUser(req, res) {
   });
 }
 
-module.exports = { createUser, verifyUser };
+module.exports = { createUser, verifyUser, nearbyRests };

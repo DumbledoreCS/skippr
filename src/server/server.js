@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.get('/user/restaurants', restaurantController.displayRests);
 app.get('/user/restaurants/:fkRestId', restaurantController.getRestMenu);
 app.get('/restaurant/orders/:restId', orderController.displayOrders);
+app.get('/user/nearby', userController.nearbyRests);
 
 app.post('/user/login', userController.verifyUser);
 app.post('/restaurant/login', restaurantController.verifyRest);
