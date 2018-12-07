@@ -1,7 +1,6 @@
 const axios = require('axios');
 const pgClient = require('../models/database');
 
-
 function nearbyRests(req, res) {
   // grab current coordinates of user
   // grabs all shops in database
@@ -43,10 +42,11 @@ function nearbyRests(req, res) {
     }).catch(err => res.send(err));
 }
 
+// UPDATED createUser by Dumbodore POST 'user/signup'
 // STRETCH FEATURE: write new user to users table
 function createUser(req, res) {
-  const { firstName, lastName, email, password, phoneNumber } = req.body;
-  const values = [firstName, lastName, email, password, phoneNumber];
+  const { firstname, lastname, email, password, phone } = req.body;
+  const values = [firstname, lastname, email, password, phone];
   const createUserStr = 'INSERT INTO users (firstname, lastname, email, password, phone) VALUES ($1, $2, $3, $4, $5) RETURNING *;';
   pgClient.query(createUserStr, values, (err, result) => {
     if (err) res.status(400).json({ error: 'Unable to create a new user' });
@@ -59,10 +59,12 @@ function createUser(req, res) {
   });
 }
 
+// UPDATED verifyUser by Dumbodore POST '/user/login'
 // fetch user email and password match from users table
 function verifyUser(req, res) {
   const { email, password } = req.body;
   const values = [email, password];
+
   const verifyUserStr = 'SELECT * FROM users WHERE email = $1 AND password = $2;';
   pgClient.query(verifyUserStr, values, (err, result) => {
     if (err) res.status(500).json({ error: 'error' });
