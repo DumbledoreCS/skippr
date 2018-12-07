@@ -4,31 +4,38 @@ const pgClient = require('../models/database');
 
 function nearbyRests(req, res) {
   // grab current coordinates of user
+  // grabs all shops in database
+  // filter list of shops by proximity to user
+  // return filtered list of shops
   let lat;
   let lng;
-  let restCoords;
+  let restInfo;
   let nearby;
   axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAIDCvHRxSebeeGzY38HO1fFBCUY111onc')
     .then((response) => {
       lat = response.data.location.lat;
       lng = response.data.location.lng;
-      const allRestCoordsStr = 'SELECT id, latitude, longitude FROM restaurants;';
+      const allRestCoordsStr = 'SELECT * FROM restaurants;';
       pgClient.query(allRestCoordsStr, (err, result) => {
         if (err) {
           return res.send(err);
         }
-        restCoords = result.rows;
+        restInfo = result.rows;
+        const destStr = result.rows.reduce((accum, curr) => {
+          accum.push(`${curr.latitude}%2C${curr.longitude}%7C`);
+          return accum;
+        }, []).join('');
+        axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${lat},${lng}&destinations=${destStr}&key=AIzaSyAIDCvHRxSebeeGzY38HO1fFBCUY111onc`)
+          .then((response2) => {
+            for (let i = 0; i < response2.data.rows[0].elements.length; i += 1) {
+              restInfo[i].distance = response2.data.rows[0].elements[i].distance;
+            }
+            nearby = restInfo.sort((a, b) => a.distance.value - b.distance.value).slice(0,4);
+            res.send(nearby);
+          })
+          .catch(err2 => res.send(err2));
       });
-    })
-    .then(() => {
-      const dist = [];
-      restCoords.forEach((elem) => {
-        axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${lat},${lng}&destinations=`)
-      })
-    })
-  // grabs all shops in database
-  // filter list of shops by proximity to user
-  // return filtered list of shops
+    });
 }
 
 // STRETCH FEATURE: write new user to users table
