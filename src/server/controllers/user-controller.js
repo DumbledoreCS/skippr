@@ -1,9 +1,5 @@
 const pgClient = require('../models/database');
 
-function createGoogleId (req, res) {
-  const { google_id } = req.body;
-} 
-
 // UPDATED createUser by Dumbodore POST 'user/signup'
 // STRETCH FEATURE: write new user to users table
 function createUser(req, res) {
