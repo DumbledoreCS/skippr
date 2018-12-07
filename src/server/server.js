@@ -129,6 +129,7 @@ app.get('/test', (req, res) => {
 app.get('/user/restaurants', restaurantController.displayRests); // checked by Dumbodore
 app.get('/user/restaurants/:fkRestId', restaurantController.getRestMenu); // checked by Dumbodore
 app.get('/restaurant/orders/:restId', orderController.displayOrders); 
+app.get('/user/nearby', userController.nearbyRests); // added by Dumbodore
 
 app.post('/user/login', userController.verifyUser); // checked by Dumbodore
 app.post('/restaurant/login', restaurantController.verifyRest); // checked by Dumbodore
@@ -136,6 +137,8 @@ app.post('/user/signup', userController.createUser); // checked by Dumbodore
 app.post('/user/order', orderController.submitOrder);
 app.post('/restaurant/signup', restaurantController.createRest); // checked by Dumbodore
 app.post('/restaurant/menu', restaurantController.createMenu); // created by Dumbodore
+
+
 
 app.post('/user/orderdetails', orderController.createOrderPerItem);
 

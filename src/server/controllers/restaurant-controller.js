@@ -1,34 +1,68 @@
+const axios = require('axios');
 const pgClient = require('../models/database');
-
 
 // UPDATED createRest by Dumbodore POST 'restaurant/signup'
 // STRETCH FEATURE: write new restaurant row to restaurants table
 function createRest(req, res) {
+  // deconstructs properties stored in request body
   const { name, email, password, address, city, state, zipcode, phone, yelp_link, image_link } = req.body;
-  const values = [name, email, password, address, city, state, zipcode, phone, yelp_link, image_link];
-  const createRestStr = 'INSERT INTO restaurants (name, email, password, address, city, state, zipcode, phone, yelp_link, image_link) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;';
-  pgClient.query(createRestStr, values, (err, result) => {
-    if (err) res.status(400).json({ error: 'Unable to create a restaurant account' });
-    else {
-      res.status(200).json({
-        message: 'New restaurant account has been successfully created',
-        restaurant: result.rows[0],
-      });
-    }
-  });
+  // create correctly formatted address for request
+  const formatAddress = `${address}, ${city}, ${state}, ${zipcode}`;
+  // send request to google api
+  // when request returns, store longitude and latitude into respective labels
+  // include long and lat as input to store into via values array
+  // insert data into database
+  axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+    params: {
+      address: formatAddress,
+      key: 'AIzaSyAIDCvHRxSebeeGzY38HO1fFBCUY111onc',
+    },
+  })
+    .then((response) => {
+      const lat = response.data.results[0].geometry.location.lat;
+      const lng = response.data.results[0].geometry.location.lng;
+      const values = [name, email, password, lat, lng, address, city, state, zipcode, phone, yelp_link, image_link];
+      const createRestStr = 'INSERT INTO restaurants (name, email, password, latitude, longitude, address, city, state, zipcode, phone, yelp_link, image_link) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *;';
+      pgClient.query(createRestStr, values, (err, result) => {
+        if (err) res.status(400).json({ error: 'Unable to create a restaurant account' });
+        else {
+          res.status(200).json({
+            message: 'New restaurant account has been successfully created',
+            restaurant: result.rows[0],
+          });
+        }
+      })
+    })
+    .catch(err => res.send(err));
 }
+
+// UPDATED createRest by Dumbodore POST 'restaurant/signup'
+// STRETCH FEATURE: write new restaurant row to restaurants table
+// function createRest(req, res) {
+//   const { name, email, password, address, city, state, zipcode, phone, yelp_link, image_link } = req.body;
+//   const values = [name, email, password, address, city, state, zipcode, phone, yelp_link, image_link];
+//   const createRestStr = 'INSERT INTO restaurants (name, email, password, address, city, state, zipcode, phone, yelp_link, image_link) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;';
+//   pgClient.query(createRestStr, values, (err, result) => {
+//     if (err) res.status(400).json({ error: 'Unable to create a restaurant account' });
+//     else {
+//       res.status(200).json({
+//         message: 'New restaurant account has been successfully created',
+//         restaurant: result.rows[0],
+// >>>>>>> master
+//       });
+//     })
+//     .catch(err => res.send(err));
+// }
 
 // UPDATED verifyRest by Dumbodore POST '/restaurant/login'
 // fetch restaurant email and password match from restaurants table 
 function verifyRest(req, res) {
   const { email, password } = req.body;
-  // console.log(req.body);
   const values = [email, password];
-  // console.log(values);
   const verifyRestStr = 'SELECT * FROM restaurants WHERE email = $1 AND password = $2;';
   pgClient.query(verifyRestStr, values, (err, result) => {
     if (err) res.status(400).json({ error: 'Error' });
-    else if (result.rows.length === 0) res.status(400).json({ error: 'Incorrect email or password'});
+    else if (result.rows.length === 0) res.status(400).json({ error: 'Incorrect email or password' });
     else res.status(200).json(result.rows[0]);
   });
 }
