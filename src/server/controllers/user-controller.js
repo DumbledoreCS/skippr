@@ -35,9 +35,8 @@ function nearbyRests(req, res) {
                   res.send(nearby);
                 }
               });
-            })
-            // res.send(nearby);
-          })
+            });
+          });
       });
     }).catch(err => res.send(err));
 }

@@ -36,24 +36,6 @@ function createRest(req, res) {
     .catch(err => res.send(err));
 }
 
-// UPDATED createRest by Dumbodore POST 'restaurant/signup'
-// STRETCH FEATURE: write new restaurant row to restaurants table
-// function createRest(req, res) {
-//   const { name, email, password, address, city, state, zipcode, phone, yelp_link, image_link } = req.body;
-//   const values = [name, email, password, address, city, state, zipcode, phone, yelp_link, image_link];
-//   const createRestStr = 'INSERT INTO restaurants (name, email, password, address, city, state, zipcode, phone, yelp_link, image_link) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;';
-//   pgClient.query(createRestStr, values, (err, result) => {
-//     if (err) res.status(400).json({ error: 'Unable to create a restaurant account' });
-//     else {
-//       res.status(200).json({
-//         message: 'New restaurant account has been successfully created',
-//         restaurant: result.rows[0],
-// >>>>>>> master
-//       });
-//     })
-//     .catch(err => res.send(err));
-// }
-
 // UPDATED verifyRest by Dumbodore POST '/restaurant/login'
 // fetch restaurant email and password match from restaurants table 
 function verifyRest(req, res) {
