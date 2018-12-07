@@ -17,9 +17,6 @@ function nearbyRests(req, res) {
       lng = response.data.location.lng;
       const allRestCoordsStr = 'SELECT * FROM restaurants;';
       pgClient.query(allRestCoordsStr, (err, result) => {
-        if (err) {
-          return res.send(err);
-        }
         restInfo = result.rows;
         const destStr = result.rows.reduce((accum, curr) => {
           accum.push(`${curr.latitude}%2C${curr.longitude}%7C`);
@@ -31,11 +28,19 @@ function nearbyRests(req, res) {
               restInfo[i].distance = response2.data.rows[0].elements[i].distance;
             }
             nearby = restInfo.sort((a, b) => a.distance.value - b.distance.value).slice(0,4);
-            res.send(nearby);
+            nearby.forEach((curr, ind) => {
+              const getMenuStr = `SELECT id, name, price, "desc", calories FROM menu_items WHERE fk_rest_id = ${curr.id};`;
+              pgClient.query(getMenuStr, (err2, result2) => {
+                curr.menu = result2.rows;
+                if (ind === nearby.length - 1) {
+                  res.send(nearby);
+                }
+              });
+            })
+            // res.send(nearby);
           })
-          .catch(err2 => res.send(err2));
       });
-    });
+    }).catch(err => res.send(err));
 }
 
 // STRETCH FEATURE: write new user to users table
@@ -57,9 +62,7 @@ function createUser(req, res) {
 // fetch user email and password match from users table
 function verifyUser(req, res) {
   const { email, password } = req.body;
-  // console.log(req.body);
   const values = [email, password];
-  // console.log(values);
   const verifyUserStr = 'SELECT * FROM users WHERE email = $1 AND password = $2;';
   pgClient.query(verifyUserStr, values, (err, result) => {
     if (err) res.status(500).json({ error: 'error' });
