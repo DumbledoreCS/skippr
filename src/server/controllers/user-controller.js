@@ -42,7 +42,7 @@ function nearbyRests(req, res) {
 function createUser(req, res) {
   const { firstName, lastName, email, password, phoneNumber } = req.body;
   const values = [firstName, lastName, email, password, phoneNumber];
-  const createUserStr = 'INSERT INTO users (user_firstname, user_lastname, user_email, user_password, user_phone) VALUES ($1, $2, $3, $4, $5) RETURNING *;';
+  const createUserStr = 'INSERT INTO users (firstname, lastname, email, password, phone) VALUES ($1, $2, $3, $4, $5) RETURNING *;';
   pgClient.query(createUserStr, values, (err, result) => {
     if (err) res.status(400).json({ error: 'Unable to create a new user' });
     else {
@@ -60,7 +60,7 @@ function verifyUser(req, res) {
   // console.log(req.body);
   const values = [email, password];
   // console.log(values);
-  const verifyUserStr = 'SELECT * FROM users WHERE user_email = $1 AND user_password = $2;';
+  const verifyUserStr = 'SELECT * FROM users WHERE email = $1 AND password = $2;';
   pgClient.query(verifyUserStr, values, (err, result) => {
     if (err) res.status(500).json({ error: 'error' });
     else if (result.rows.length === 0) res.status(400).json({ error: 'Incorrect email or password' });

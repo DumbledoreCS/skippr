@@ -1,5 +1,5 @@
-const pgClient = require('../models/database');
 const axios = require('axios');
+const pgClient = require('../models/database');
 
 
 // STRETCH FEATURE: write new restaurant row to restaurants table
@@ -7,7 +7,7 @@ function createRest(req, res) {
   // deconstructs properties stored in request body
   const { name, email, password, address, city, state, zipCode, phone, yelpLink, imageLink } = req.body;
   // create correctly formatted address for request
-  let formatAddress = `${address}, ${city}, ${state}, ${zipCode}`;
+  const formatAddress = `${address}, ${city}, ${state}, ${zipCode}`;
   // send request to google api
   // when request returns, store longitude and latitude into respective labels
   // include long and lat as input to store into via values array
@@ -27,7 +27,7 @@ function createRest(req, res) {
         if (err) res.status(400).json({ error: 'Unable to create a restaurant account' });
         else {
           res.status(200).json({
-            message: 'New restaurant account has been successfully create',
+            message: 'New restaurant account has been successfully created',
             restaurant: result.rows[0],
           });
         }
@@ -39,13 +39,11 @@ function createRest(req, res) {
 // fetch restaurant email and password match from restaurants table
 function verifyRest(req, res) {
   const { email, password } = req.body;
-  // console.log(req.body);
   const values = [email, password];
-  // console.log(values);
-  const verifyRestStr = 'SELECT * FROM restaurants WHERE rest_email = $1 AND rest_password = $2;';
+  const verifyRestStr = 'SELECT * FROM restaurants WHERE email = $1 AND password = $2;';
   pgClient.query(verifyRestStr, values, (err, result) => {
     if (err) res.status(400).json({ error: 'Error' });
-    else if (result.rows.length === 0) res.status(400).json({ error: 'Incorrect email or password'});
+    else if (result.rows.length === 0) res.status(400).json({ error: 'Incorrect email or password' });
     else res.status(200).json(result.rows[0]);
   });
 }
